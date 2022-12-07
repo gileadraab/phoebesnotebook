@@ -2,8 +2,8 @@
   user: root
   tasks:
     - name: Get repository from git and update locally
-  ansible.builtin.git:
-    repo: 'https://github.com/gileadraab/mysite'
-    dest: /home/gileadraab/
-    clone: yes
-    update: yes
+      ansible.builtin.git:
+        repo: 'https://github.com/gileadraab/mysite.git'
+        dest: /home/gileadraab/mysite/test
+        clone: yes
+        update: yes
