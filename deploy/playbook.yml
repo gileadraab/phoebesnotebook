@@ -1,0 +1,5 @@
+- hosts: 5.161.66.182
+  user: root
+  tasks:
+    - name: do something in the shell
+      shell: echo hello > /tmp/abc.txt
