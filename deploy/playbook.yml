@@ -1,9 +1,25 @@
-- hosts: 5.161.66.182
+- hosts: 5.161.90.22
   user: root
   tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: 'https://github.com/gileadraab/mysite.git'
-        dest: /home/gileadraab/mysite/test
+        dest: /home/mysite/
         clone: yes
         update: yes
+
+    - name: Install bottle into the specified (virtualenv), inheriting globally installed modules
+      ansible.builtin.pip:
+        name: bottle
+        virtualenv: /home/mysite/venv
+        virtualenv_site_packages: yes
+
+    - name: Install specified python requirements
+      ansible.builtin.pip:
+        requirements: /home/mysite/requirements.txt
