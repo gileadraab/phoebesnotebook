@@ -7,6 +7,10 @@
         upgrade: yes
         update_cache: yes
 
+    - name: Install the package "python3.8-venv"
+      ansible.builtin.apt:
+        name: python3.8-venv
+
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: 'https://github.com/gileadraab/mysite.git'
@@ -14,12 +18,54 @@
         clone: yes
         update: yes
 
-    - name: Install bottle into the specified (virtualenv), inheriting globally installed modules
+    - name: Install specified python requirements in indicated virtualenv
       ansible.builtin.pip:
-        name: bottle
-        virtualenv: /home/mysite/venv
-        virtualenv_site_packages: yes
-
-    - name: Install specified python requirements
-      ansible.builtin.pip:
+        virtualenv_command: python3 -m venv
         requirements: /home/mysite/requirements.txt
+        virtualenv: /home/mysite/venv
+    
+    - name: Copy service file with owner and permissions to server
+      ansible.builtin.copy:
+        src: mysite.service
+        dest: /etc/systemd/system/
+        owner: root
+        group: root
+        mode: '0777'
+
+    - name: Start gunicorn service
+      systemd:
+        name: mysite
+        state: started
+
+    - name: Enable gunicorn service
+      systemd:
+        name: mysite
+        enabled: true
+
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+
+    - name: Copy server block configuration file to server
+      ansible.builtin.copy:
+        src: mysite
+        dest: /etc/nginx/sites-available/mysite
+        owner: root
+        group: root
+        mode: '0777'   
+
+    - name: Creating a symlink between mysite to sites-enabled directory
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/mysite
+        dest: /etc/nginx/sites-enabled/mysite
+        state: link 
+    
+    - name: Start nginx
+      systemd:
+        name: nginx
+        state: started
+    
+
+      
+
+    
