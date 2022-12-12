@@ -35,7 +35,8 @@
     - name: Start gunicorn service
       systemd:
         name: mysite
-        state: started
+        state: restarted
+        daemon_reload: yes
 
     - name: Enable gunicorn service
       systemd:
@@ -45,6 +46,20 @@
     - name: Install nginx
       ansible.builtin.apt:
         name: nginx
+
+    - name: alow ssh
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: alow nginx
+      community.general.ufw:
+        rule: allow
+        name: Nginx Full
+    
+    - name: enable UFW
+      community.general.ufw:
+        state: reloaded
 
     - name: Copy server block configuration file to server
       ansible.builtin.copy:
@@ -63,7 +78,7 @@
     - name: Start nginx
       systemd:
         name: nginx
-        state: started
+        state: restarted
     
 
       

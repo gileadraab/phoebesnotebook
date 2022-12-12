@@ -4,10 +4,10 @@ After=network.target
 
 [Service]
 User=root
-Group=www-data
+Group=root
 WorkingDirectory=/home/mysite
 Environment="PATH=/home/mysite/venv/bin"
-ExecStart=/home/mysite/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:5000:app
+ExecStart=/home/mysite/venv/bin/gunicorn --workers 3 --bind unix:myproject.sock app:app
 
 [Install]
 WantedBy=multi-user.target
