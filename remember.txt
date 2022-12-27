@@ -1,0 +1,3 @@
+-- terminar de adaptar template sidebar.html (em especial fazer funcionar site.pages e social networks). Ignorar tudo relacionado a rss
+-- criar page about (criar nova rota, reutilizar template do portifolio (pensar no conteudo exato))
+-- pr para versao alpha com items acima

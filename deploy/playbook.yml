@@ -1,4 +1,12 @@
 - hosts: 5.161.90.22
+  vars: 
+    git_repo: 'https://github.com/gileadraab/mysite.git'
+    folder_project_destination: /home/mysite/
+    requirements_path: /home/mysite/requirements.txt
+    venv_path: /home/mysite/venv
+    service_file: mysite.service
+    block_configuration_file: mySiteBlockConfiguration
+    
   user: root
   tasks:
     - name: Update and upgrade apt packages
@@ -13,20 +21,20 @@
 
     - name: Get repository from git and update locally
       ansible.builtin.git:
-        repo: 'https://github.com/gileadraab/mysite.git'
-        dest: /home/mysite/
+        repo: "{{git_repo}}"
+        dest: "{{folder_project_destination}}"
         clone: yes
         update: yes
 
     - name: Install specified python requirements in indicated virtualenv
       ansible.builtin.pip:
         virtualenv_command: python3 -m venv
-        requirements: /home/mysite/requirements.txt
-        virtualenv: /home/mysite/venv
+        requirements: "{{requirements_path}}"
+        virtualenv: "{{venv_path}}"
     
     - name: Copy service file with owner and permissions to server
       ansible.builtin.copy:
-        src: mysite.service
+        src: "{{service_file}}"
         dest: /etc/systemd/system/
         owner: root
         group: root
@@ -34,13 +42,13 @@
 
     - name: Start gunicorn service
       systemd:
-        name: mysite
+        name: "{{service_file}}"
         state: restarted
         daemon_reload: yes
 
     - name: Enable gunicorn service
       systemd:
-        name: mysite
+        name: "{{service_file}}"
         enabled: true
 
     - name: Install nginx
@@ -49,13 +57,11 @@
 
     - name: alow ssh
       community.general.ufw:
+        name: "{{item}}"
         rule: allow
-        name: OpenSSH
-
-    - name: alow nginx
-      community.general.ufw:
-        rule: allow
-        name: Nginx Full
+      loop:
+        - OpenSSH
+        - Nginx Full
     
     - name: enable UFW
       community.general.ufw:
@@ -63,16 +69,16 @@
 
     - name: Copy server block configuration file to server
       ansible.builtin.copy:
-        src: mysite
-        dest: /etc/nginx/sites-available/mysite
+        src: "{{block_configuration_file}}"
+        dest: /etc/nginx/sites-available/{{block_configuration_file}}
         owner: root
         group: root
         mode: '0777'   
 
-    - name: Creating a symlink between mysite to sites-enabled directory
+    - name: Creating a symlink between sites-available and sites-enabled directories
       ansible.builtin.file:
-        src: /etc/nginx/sites-available/mysite
-        dest: /etc/nginx/sites-enabled/mysite
+        src: /etc/nginx/sites-available/{{block_configuration_file}}
+        dest: /etc/nginx/sites-enabled/{{block_configuration_file}}
         state: link 
     
     - name: Start nginx

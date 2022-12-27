@@ -1,0 +1,15 @@
+How to deploy a flask aplication using Gunicorn Nginx and Ansible
+
+0- install ansible
+
+1 - fazer o setup do server, atualizar ubuntu etc usando o ansible
+
+2 - fazer o clone do repo com p projeto do git pro server 
+
+3 - criar um venv pra fazer o setup do gunicorn porem utilizando o ansible
+
+4 - rodar o gunicorn usando o ansible
+
+5 - criar um WSGI Entry Point (step 3 do tuto da Digital Ocean https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04)
+
+6 - instalar e rodar o nginx na maquina remota usando o ansible, algo proximo desse tutorial aqui a partir de 

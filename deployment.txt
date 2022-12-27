@@ -1,0 +1,15 @@
+ip:5.161.66.182 
+
+1. connect to remote server ("ssh root@serverip")
+2. set hostname (hostnamectl set-hostname "name")
+3. set hostname to host file ("nano /etc/hosts") ?
+4. add limited user ("adduser "username"")
+5. add user to sudo group so he can run admin commands ("adduser "username" sudo")
+6. log out as root and log in as user ("ssh username@serverip")
+7. change user authentication from user to SSH key
+	7.1 create directory to save key ("mkdir .ssh")
+	7.2 generate SSH key (on local machine) ("ssh-keygen -b 4096")
+	7.3 move public key to server ("scp ~/.ssh/id2rsa.pub gileadraab@5.161.66.182:~/.ssh/authorized_keys")
+8. update SSH permissions:("sudo chmod 700 ~/.ssh/" and "sudo chmod 600 ~/.ssh/*")
+
+
