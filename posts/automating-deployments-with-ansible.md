@@ -1,38 +1,13 @@
-# Automating Flask applications deployments using Ansible, Gunicorn and Nginx
-
 In this article we will explore the purpose, the tools and the steps necessary to automate the deployment of flask web applications using Ansible:
 
 ## Content
-- Why it might be a good idea to automate your deployment process
-- An overview on Ansible
-
-- What this article will not cover
-
-- Getting started
--- Creating a requirements.txt file
--- Setting up a virtual enviroment
--- Creating a flask application
--- Uploading your project to a github repository
--- Installing Ansible
--- Creating an inventory file and a playbook
-
-- Building your Ansible playbook:
--- Setting up and updating your remote server
--- Downloading your project to your remote server
--- Setting up a virtual enviroment in your server and installing dependencies
--- Configuring Gunicorn:
--- Installing and Configuring Nginx to Proxy Requests
--- Defining variables
-
-- Runing your Ansible playbook
-
-- Conclusion
+[TOC]
 
 
 ## Why it might be a good idea to automate your deployment processes
-The value of deployment automation may vary depending on the size, complexity or volume of your processess but here are some key bennefits that automated deplyments can bring whether you are a regular user or a big business or organization:
-- Faster deployments: once you have your automated deploying process set up, it can be performed in seconds. This might be quite handy either if you are making changes to your application, deploying to a new server or restoring your network services after a crash.
-- Minimizing errors: deployments involve multiple steps, when doing it manually essential steps can be missed and small  mistakes might be overlooked. Once your deployment automation has been correctly configured the proccess is set and you can rely on it to aways work the same way
+The value of deployment automation may vary depending on the size, complexity or volume of your processess but here are some key bennefits that automated deplyments can bring whether you are a regular user or a big business or organization:<br>
+- Faster deployments: once you have your automated deploying process set up, it can be performed in seconds. This might be quite handy either if you are making changes to your application, deploying to a new server or restoring your network services after a crash.<br>
+- Minimizing errors: deployments involve multiple steps, when doing it manually essential steps can be missed and small  mistakes might be overlooked. Once your deployment automation has been correctly configured the proccess is set and you can rely on it to aways work the same way<br>
 - Scalability: If you are working with a single application, without continuous update releases and only one server, deploying it manually doesn't seen to be a problem. Scale this up to more than three applications with diferent dependencies or multiply the number of servers you are deploying to and it can get really messy very fast. Automated deployments allows you to configure and manage multiple servers and applications in an considerably more controlled manner, making it not only less repetitive and time consuming but less prone to human errors as well.
 
 ## An overview on Ansible
@@ -78,11 +53,11 @@ $ pip install -r requirements.txt
 
 ### _Creating a flask application_
 After that we will create a very simple Flask aplication inside our project folder
-```sh
-$ touch myproject.py
 ```
-
-```sh
+$ touch myproject.py
+``` 
+<br>
+```
 from flask import Flask,
 
 app = Flask(__name__)
@@ -232,11 +207,11 @@ Group=root
 
 Now, we will map out the working directory and set the PATH environmental variable so that the init system knows that the executables for the process are located within our virtual environment. 
 
-Also specify the command to start the service. This command will do the following:
-Provide the full path to the Gunicorn executable, which is installed within our virtual environment.
-Start 3 worker processes
-Create and bind to a Unix socket file: "myproject.sock" within your project directory.
-Tells Gunicorn to load your Flask application by binding the module import name of your application file alongside with the Python callable within that file (myproject:app)
+Also specify the command to start the service. This command will do the following:<br>
+- Provide the full path to the Gunicorn executable, which is installed within our virtual environment.<br>
+- Start 3 worker processes<br>
+- Create and bind to a Unix socket file: "myproject.sock" within your project directory.<br>
+- Tells Gunicorn to load your Flask application by binding the module import name of your application file alongside with the Python callable within that file (myproject:app)
 
 ```sh
 [Unit]
@@ -376,7 +351,7 @@ Save it in your deployment folder and close it.
 
  Now that we have our server block configuration file set up we want to copy it to Nginx’s sites-available directory in our server. We do this the same way we did with our services file using [ansible.builtin.copy module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html)
  
- ```sh
+```sh
 - hosts: <YOUR_SERVER_IP>
   user: root
   tasks:
@@ -389,11 +364,11 @@ Save it in your deployment folder and close it.
         owner: root
         group: root
         mode: '0777'  
- ```
+```
  
 To enable the Nginx server block configuration you’ve just created, link the file to the sites-enabled directory. Do this by creating a symlink between the sites-available to sites-enabled directory using the [ansible.builtin.file module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html) that allows you to set attributes to files, directories, or symlinks and their targets.
 
- ```sh
+```sh
 - hosts: <YOUR_SERVER_IP>
   user: root
   tasks:
@@ -404,10 +379,11 @@ To enable the Nginx server block configuration you’ve just created, link the f
         src: /etc/nginx/sites-available/myproject
         dest: /etc/nginx/sites-enabled/myproject
         state: link 
- ```
+```
  
  Now we will start nginx using the [ansible.builtin.systemd module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/systemd_module.html). Similarly to Gunicorn we want to set the state to "restarted" instead of "started" as we want it to reflect eventual changes we do in it's configuration every time we run our deployment playbook.
-  ```sh
+
+```sh
 - hosts: <YOUR_SERVER_IP>
   user: root
   tasks:
@@ -417,7 +393,7 @@ To enable the Nginx server block configuration you’ve just created, link the f
       systemd:
         name: nginx
         state: restarted
- ```
+```
  
 ### _Defining variables_
 When dealing with local files and paths we do not want them hard coded in our playbook tasks, as it can gets considerably hard and confusing to replace one by one, either if in the future we are using the same playbook to deploy a different applicattion or if we are redeploying the same application but changed the path to a file or directory or altered the name of a specific file. For that reason it is good practice to define them as variables at the begining of our playbook and replace them on the body of our tasks. 

@@ -1,3 +1,6 @@
 Flask
 gunicorn
 pyyaml
+MarkupSafe
+markdown
+Pygments

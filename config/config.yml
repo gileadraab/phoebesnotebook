@@ -12,7 +12,6 @@ disqus: your_disqus_site
 # Pages
 pages:
 - {layout: 'page', url: /about, title: 'About'}
-- {layout: 'page', url: /mypost, title: 'Post'}
 
 
 # Social Accounts

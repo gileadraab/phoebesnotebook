@@ -1,0 +1,9 @@
+date: "28/12/22 23:32"
+title: "Automating Flask applications deployments using Ansible, Gunicorn and Nginx"
+image: ""
+tags: 
+- "test" 
+- "tag-test"
+show_comments: 1
+markdown_path: "automating-deployments-with-ansible.md"
+slug: "automating-deployments-with-ansible"
