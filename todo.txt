@@ -1,2 +1,3 @@
 melhorar code blocks (add $, botão copy to clipboard, melhorar padding)
 consertar botões de share
+lidar com erro 404

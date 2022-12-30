@@ -90,11 +90,17 @@ def post(slug):
 
   post = Post(**post_yaml)
 
+  posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+
+  paginator = {
+    'posts': posts
+  }
+
   page = {
     "url": "/mypost"
   }
 
-  html= render_template("default.html", site=site, page=page, post=post, body_template = 'post.html')
+  html= render_template("default.html", site=site, page=page, post=post, body_template = 'post.html', paginator=paginator)
   return html
 
 @app.route("/tag/<slug>")
