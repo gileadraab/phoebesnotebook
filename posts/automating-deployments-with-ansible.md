@@ -1,8 +1,8 @@
-In this article we will explore the purpose, the tools and the steps necessary to automate the deployment of flask web applications using Ansible:
+In this article we will explore the purposes, the tools and the steps necessary to automate the deployment of flask web applications using Ansible.
 
-## Content
+We will be covering:
+
 [TOC]
-
 
 ## Why it might be a good idea to automate your deployment processes
 The value of deployment automation may vary depending on the size, complexity or volume of your processess but here are some key bennefits that automated deplyments can bring whether you are a regular user or a big business or organization:<br>
@@ -27,7 +27,7 @@ $ cd myproject
 ### _Creating a requirements file_
 the next step is to create a requirements.txt file where we will include all the needed dependencies that should be installed to our virtual enviroment 
 ```sh
-touch requirements.txt
+$ touch requirements.txt
 ```
 In this case we included only Flask, which we will be using to develop our application, and gunicorn, that will be responsible to manage the comunication between the application and the web services, but it might include a lot more modules and dependencies depending on the complexity of your application:
 ```sh
@@ -38,11 +38,11 @@ gunicorn
 ### _Setting up a virtual enviroment_
 now let's start a virtual enviroment where we will install the dependecies necessary to run our Flask application. Type:
 ```sh
-python3 -m venv myprojectenv
+$ python3 -m venv myprojectenv
 ```
 to create the virtual enviroment, and then
 ```sh
-source myprojectenv/bin/activate
+$ source myprojectenv/bin/activate
 ```
 to activate it
 
@@ -95,6 +95,7 @@ An inventory file called "hosts" with a list of hosts you want to manage:
 ```sh
 $ touch hosts
 ```
+<br>
 ```sh
 [sites]
 <YOUR_SERVER_IP>

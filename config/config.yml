@@ -1,28 +1,29 @@
 # General Settings
 name: Gilead Raab
-job_title: UI/UX Engineer
-email: youremail@gmail.com
-description: I build great products at Google, currently Google Maps. I also enjoy capturing moments with my camera and discovering new music. Follow me Twitter or drop me a line.
+job_title: Back-end developer
+email: gileadraab@gmail.com
+description: Figuring out the world, one line of code at a time. Follow me on Twitter or drop me a line.
 avatar: https://avatars.githubusercontent.com/u/42283792?v=4
 favicon: /favicon.ico
-twitter_handler: your_handler
+twitter_handler: gileadraab
 analytics_code: UA-XXXXXXX-2
 disqus: your_disqus_site
 
 # Pages
 pages:
-- {layout: 'page', url: /about, title: 'About'}
+-
+#- {layout: 'page', url: /about, title: 'About'}
 
 
 # Social Accounts
 social_networks:
--  { name: facebook, url: 'http://facebook.com' }
--  { name: twitter, url: 'http://twitter.com' }
+-  { name: facebook, url: 'http://facebook.com/gileadraab' }
+-  { name: twitter, url: 'http://twitter.com/gileadraab' }
 -  { name: instagram, url: '' }
 -  { name: google-plus, url: '' }
 -  { name: linkedin, url: '' }
 -  { name: skype, url: '' }
--  { name: github, url: '' }
+-  { name: github, url: 'http://github.com/gileadraab/' }
 -  { name: codepen, url: '' }
 -  { name: stack-overflow, url: '' }
 -  { name: dribbble, url: '' }

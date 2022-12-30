@@ -48,7 +48,7 @@ class Post:
     with open(self.markdown_path, "r", encoding="utf-8") as post:
       self.content = Markup(markdown.markdown(post.read(), extensions=['fenced_code', 'toc', 'codehilite']))
     
-    self.excerpt = self.content[0:300]
+    self.excerpt = self.content[0:3000]
 
 @app.route("/")
 def index():
@@ -66,9 +66,7 @@ def index():
     "url": "/"
   }
 
-  content = "Hello world"
-
-  html= render_template("default.html", site=site, page=page, content=content, body_template="index.html", paginator=paginator )
+  html= render_template("default.html", site=site, page=page, body_template="index.html", paginator=paginator )
   return html
 
 

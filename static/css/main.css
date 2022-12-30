@@ -9,7 +9,7 @@ body {
   font: 400 14px/1 "Roboto", Arial, sans-serif;
   color: #666;
   background: #fcfcfc;
-  box-shadow: inset 0 15px 0 #1abc9c;
+  box-shadow: inset 0 15px 0 rgb(71, 78, 88);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -148,7 +148,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
 }
 .user-profile .mainmenu a:hover, .user-profile .mainmenu a.active {
   background: #f9f9f9;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05), inset 4px 0 0 #1abc9c;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05), inset 4px 0 0 rgb(71, 78, 88);
 }
 .user-profile .mainmenu a:first-of-type {
   border-top: 1px solid #eee;
@@ -183,7 +183,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #dfdfdf;
+  background: rgb(135, 139, 146);
   border-radius: 50%;
   transition: all 0.1s ease;
   -moz-transition: all 0.1s ease;
@@ -191,7 +191,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   -o-transition: all 0.1s ease;
 }
 .user-profile .socials li a:hover {
-  background: #1abc9c;
+  background: rgb(94, 99, 107);
 }
 .user-profile .socials li a svg * {
   fill: #fff;
@@ -457,8 +457,8 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   content: ",";
 }
 .the-content .post .post-header ul li.cats a:hover {
-  color: #1abc9c;
-  border-bottom: 1px solid #1abc9c;
+  color: rgb(71, 78, 88);
+  border-bottom: 1px solid rgb(71, 78, 88);
 }
 .the-content .post .post-header h1, .the-content .post .post-header h2 {
   font-size: 30px;
@@ -474,7 +474,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   -o-transition: color 0.1s ease;
 }
 .the-content .post .post-header h1 a:hover, .the-content .post .post-header h2 a:hover {
-  color: #1abc9c;
+  color: rgb(71, 78, 88);
 }
 .the-content .post .post-content {
   font-size: 16px;
@@ -551,8 +551,8 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   color: #aaa;
 }
 .the-content .post .post-content a {
-  color: #1abc9c;
-  border-bottom: 1px solid #1abc9c;
+  color: rgb(71, 78, 88);
+  border-bottom: 1px solid rgb(71, 78, 88);
   transition: border 0.1s ease;
   -moz-transition: border 0.1s ease;
   -webkit-transition: border 0.1s ease;
@@ -997,7 +997,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   color: #666;
 }
 .the-content .pagination .previous:hover, .the-content .pagination .next:hover {
-  background: #1abc9c;
+  background: rgb(71, 78, 88);
   color: #fff;
 }
 .the-content .pagination .page_number {
@@ -1020,6 +1020,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   padding: 40px;
   font-size: 16px;
 }
+
 
 @media screen and (max-width: 768px), screen and (max-device-width: 768px) {
   body {
@@ -1079,7 +1080,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
     width: 100%;
     padding: 20px;
     background: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1), 0 -5px 0 #1abc9c;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1), 0 -5px 0 rgb(71, 78, 88);
     z-index: 9998;
   }
   .user-profile .compact-header .avatar {
