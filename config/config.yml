@@ -1,17 +1,17 @@
 # General Settings
+title: Phoebe's Notebook
 name: Gilead Raab
 job_title: Back-end developer
 email: gileadraab@gmail.com
 description: Figuring out the world, one line of code at a time. Follow me on Twitter or drop me a line.
 avatar: https://avatars.githubusercontent.com/u/42283792?v=4
-favicon: /favicon.ico
+favicon: /static/favicon/favicon.ico
 twitter_handler: gileadraab
 analytics_code: UA-XXXXXXX-2
 disqus: your_disqus_site
 
 # Pages
 pages:
--
 #- {layout: 'page', url: /about, title: 'About'}
 
 
@@ -49,7 +49,7 @@ show_tags: 1
 show_email: 1
 show_rss: 1
 show_comments: 1
-show_menu: 1
+show_menu: 0
 fixed_sidebar: 1
 
 # Defaults

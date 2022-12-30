@@ -23,7 +23,7 @@
         <div class="tags">
             <ul>
                 {% for tag in post.tags %}
-                <li><a href="{{ url_for('index') }}/tag/{{ tag }}">{{ tag }}</a></li>
+                <li><a href="{{ url_for('tags', slug = tag) }}">{{ tag }}</a></li>
                 {% endfor %}
             </ul>
         </div>

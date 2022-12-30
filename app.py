@@ -26,6 +26,16 @@ def load_post_ymls() -> dict:
   
   return post_yamls
 
+def load_post_ymls_by_tag(tag) -> dict:
+  tagged_post_yamls = {}
+  for file in POSTS_FOLDER.glob("*.yml"):
+    with open(file, "r") as stream:
+      post_yaml = yaml.safe_load(stream)
+    if tag in post_yaml['tags']:
+      tagged_post_yamls[post_yaml['slug']] = post_yaml
+  
+  return tagged_post_yamls
+
 @dataclass
 class Post: 
   title: str
@@ -85,6 +95,25 @@ def post(slug):
   }
 
   html= render_template("default.html", site=site, page=page, post=post, body_template = 'post.html')
+  return html
+
+@app.route("/tag/<slug>")
+def tags(slug):
+  site = load_site_config()
+
+  tagged_posts_yamls = load_post_ymls_by_tag(slug)
+
+  posts = [Post(**post_yaml) for post_yaml in tagged_posts_yamls.values()]
+
+  paginator = {
+    'posts': posts
+  }
+
+  page = {
+    "url": "/"
+  }
+
+  html= render_template("default.html", site=site, page=page, body_template="index.html", paginator=paginator )
   return html
 
 # @app.route("/about")
