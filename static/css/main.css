@@ -283,7 +283,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05), inset 6px 0 0 #eee;
 }
 .the-content .search ::-webkit-input-placeholder {
-  color: #ddd;
+  color: rgb(182, 178, 178);
   font-size: 16px;
   font-style: italic;
 }
@@ -319,7 +319,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   min-height: 55px;
   line-height: 55px;
   color: #ddd;
-  background: #fff;
+  background: rgb(71, 78, 88);
   letter-spacing: 0.05em;
   font-size: 11px;
   text-transform: uppercase;
