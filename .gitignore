@@ -1,8 +1,8 @@
 venv/
 steve/
-remember.txt
-todo.txt
-deployment.txt
-deployment ansible.txt
+remember
+todo
+deployment
+deployment ansible
 __pycache__
 
