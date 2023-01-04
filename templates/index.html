@@ -3,13 +3,6 @@
     <header class="post-header">
         <ul>
             <li><time datetime="{{ post.date.isoformat() }}" itemprop="datePublished">{{ post.date.strftime( "%d %b, %Y" ) }}</time></li>
-            {% if site.show_categories == 1 and post.category %}
-                <li class="cats">
-                    {% for category in post.category %}
-                        <a href="{{site.baseurl}}/{{site.category_dir}}/{{category}}/">{{ category }}</a>
-                    {% endfor %}
-                </li>
-            {% endif %}
         </ul>
         <h2 itemprop="name headline"><a href="{{ url_for('post', slug = post.slug) }}">{{ post.title }}</a></h2>
     </header>

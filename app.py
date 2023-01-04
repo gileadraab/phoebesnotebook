@@ -6,11 +6,20 @@ import yaml
 from pathlib import Path
 from dataclasses import dataclass
 from typing import List
-
+from jinja2 import Template, StrictUndefined, Environment, FileSystemLoader
 
 app = Flask(__name__)
 SITE_CONFIG_FILEPATH = Path("config") / "config.yml"
 POSTS_FOLDER = Path("posts")
+TEMPLATES_FOLDER = Path("templates")
+
+def render_template_strict(template_filename, **kwargs):
+  with open(TEMPLATES_FOLDER / template_filename, "r", encoding="utf-8") as html_file:
+    html = html_file.read()
+  
+  template = Environment(loader=FileSystemLoader(TEMPLATES_FOLDER), undefined=StrictUndefined).from_string(html)
+
+  return template.render(**kwargs)
 
 def load_site_config() -> dict:
   with open(SITE_CONFIG_FILEPATH, "r") as file:
@@ -60,6 +69,16 @@ class Post:
     
     self.excerpt = self.content[0:3000]
 
+
+@dataclass
+class Page: 
+  title: str
+  title_share: str
+  description: str
+  url: str
+  image: Path
+
+
 @app.route("/")
 def index():
   site = load_site_config()
@@ -72,9 +91,7 @@ def index():
     'posts': posts
   }
 
-  page = {
-    "url": "/"
-  }
+  page = Page(title=site['title'], title_share=site['title'], description=site['description'], image=site['avatar'], url="")
 
   html= render_template("default.html", site=site, page=page, body_template="index.html", paginator=paginator )
   return html
@@ -96,9 +113,7 @@ def post(slug):
     'posts': posts
   }
 
-  page = {
-    "url": "/mypost"
-  }
+  page = Page(title=f'{post.title} | {site["title"]} ', title_share=f'{post.title} | {site["title"]}', description=post.excerpt, image=post.image, url=f"post/{slug}")
 
   html= render_template("default.html", site=site, page=page, post=post, body_template = 'post.html', paginator=paginator)
   return html

@@ -1,6 +1,6 @@
 date: "28/12/22 23:32"
 title: "Automating Flask applications deployments using Ansible, Gunicorn and Nginx"
-image: ""
+image: "/static/ansible.png"
 tags: 
 - "ansible" 
 - "automation"
