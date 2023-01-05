@@ -1,6 +1,6 @@
 - hosts: 5.161.90.22
   vars: 
-    git_repo: 'https://github.com/gileadraab/mysite.git'
+    git_repo: 'https://github.com/gileadraab/phoebesnotebook.git'
     folder_project_destination: /home/mysite/
     requirements_path: /home/mysite/requirements.txt
     venv_path: /home/mysite/venv
