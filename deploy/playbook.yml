@@ -23,6 +23,7 @@
       ansible.builtin.git:
         repo: "{{git_repo}}"
         dest: "{{folder_project_destination}}"
+        version: "gilead"
         clone: yes
         update: yes
 
