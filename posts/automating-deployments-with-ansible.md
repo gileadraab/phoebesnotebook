@@ -404,7 +404,7 @@ After doing that our playbook should be looking something like this:
 - hosts: <YOUR_SERVER_IP>
   vars: 
     git_repo: '<GITHUB_REPO_URL>'
-    folder_project_destination: /home/myproject/
+    remote_project_path: /home/myproject/
     requirements_path: /home/myproject/requirements.txt
     venv_path: /home/myproject/venv
     service_file: myProjectServices.service
@@ -424,7 +424,7 @@ After doing that our playbook should be looking something like this:
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: "{{git_repo}}"
-        dest: "{{folder_project_destination}}"
+        dest: "{{remote_project_path}}"
         clone: yes
         update: yes
 
