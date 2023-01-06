@@ -1,11 +1,13 @@
 - hosts: 5.161.90.22
-  vars: 
-    git_repo: 'https://github.com/gileadraab/phoebesnotebook.git'
-    folder_project_destination: /home/mysite/
-    requirements_path: /home/mysite/requirements.txt
-    venv_path: /home/mysite/venv
-    service_file: mysite.service
-    block_configuration_file: mySiteBlockConfiguration
+  vars:
+    app_name: phoebesnotebook 
+    git_repo: "https://github.com/gileadraab/phoebesnotebook.git"
+    git_branch: "gilead"
+    remote_project_path: /home/phoebesnotebook
+    venv_path: "{{remote_project_path}}/venv"
+    service_file: phoebesnotebook.service
+    nginx_config: nginx.conf
+    server_name: phoebesnotebook.com
     
   user: root
   tasks:
@@ -15,26 +17,29 @@
         upgrade: yes
         update_cache: yes
 
-    - name: Install the package "python3.8-venv"
+    - name: Install apt packages
       ansible.builtin.apt:
-        name: python3.8-venv
+        name: "{{item}}"
+      loop:
+        - python3.8-venv
+        - nginx
 
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: "{{git_repo}}"
-        dest: "{{folder_project_destination}}"
-        version: "gilead"
+        dest: "{{remote_project_path}}"
+        version: "{{git_branch}}"
         clone: yes
         update: yes
 
     - name: Install specified python requirements in indicated virtualenv
       ansible.builtin.pip:
         virtualenv_command: python3 -m venv
-        requirements: "{{requirements_path}}"
+        requirements: "{{remote_project_path}}/requirements.txt"
         virtualenv: "{{venv_path}}"
     
     - name: Copy service file with owner and permissions to server
-      ansible.builtin.copy:
+      ansible.builtin.template:
         src: "{{service_file}}"
         dest: /etc/systemd/system/
         owner: root
@@ -51,12 +56,8 @@
       systemd:
         name: "{{service_file}}"
         enabled: true
-
-    - name: Install nginx
-      ansible.builtin.apt:
-        name: nginx
-
-    - name: alow ssh
+   
+    - name: Allow required ports in firewall
       community.general.ufw:
         name: "{{item}}"
         rule: allow
@@ -69,17 +70,17 @@
         state: reloaded
 
     - name: Copy server block configuration file to server
-      ansible.builtin.copy:
-        src: "{{block_configuration_file}}"
-        dest: /etc/nginx/sites-available/{{block_configuration_file}}
+      ansible.builtin.template:
+        src: "{{nginx_config}}"
+        dest: /etc/nginx/sites-available/{{nginx_config}}
         owner: root
         group: root
         mode: '0777'   
 
     - name: Creating a symlink between sites-available and sites-enabled directories
       ansible.builtin.file:
-        src: /etc/nginx/sites-available/{{block_configuration_file}}
-        dest: /etc/nginx/sites-enabled/{{block_configuration_file}}
+        src: /etc/nginx/sites-available/{{nginx_config}}
+        dest: /etc/nginx/sites-enabled/{{nginx_config}}
         state: link 
     
     - name: Start nginx

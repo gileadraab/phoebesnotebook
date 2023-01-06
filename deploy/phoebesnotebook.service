@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve {{app_name}}
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory={{remote_project_path}}
+Environment="PATH={{venv_path}}/bin"
+ExecStart={{venv_path}}/bin/gunicorn --workers 3 --bind unix:{{remote_project_path}}/{{app_name}}.sock app:app
+
+[Install]
+WantedBy=multi-user.target
