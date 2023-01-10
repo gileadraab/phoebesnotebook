@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request, url_for
-from markupsafe import Markup
-import markdown
 import datetime
-import yaml
-from pathlib import Path
 from dataclasses import dataclass
-from typing import List
-from jinja2 import Template, StrictUndefined, Environment, FileSystemLoader
+from pathlib import Path
+from typing import Dict, List
+
+import markdown
+import yaml
+from flask import Flask, render_template, request, url_for
+from jinja2 import Environment, FileSystemLoader, StrictUndefined, Template
+from markupsafe import Markup
 
 app = Flask(__name__)
 SITE_CONFIG_FILEPATH = Path("config") / "config.yml"
@@ -14,7 +15,16 @@ POSTS_FOLDER = Path("posts")
 TEMPLATES_FOLDER = Path("templates")
 
 
-def render_template_strict(template_filename, **kwargs):
+def render_template_strict(template_filename: str, **kwargs):
+    """Summary
+
+    Args:
+        template_filename (str): Description
+        **kwargs: Description
+
+    Returns:
+        TYPE: Description
+    """
     with open(TEMPLATES_FOLDER / template_filename, "r", encoding="utf-8") as html_file:
         html = html_file.read()
 
@@ -26,22 +36,41 @@ def render_template_strict(template_filename, **kwargs):
 
 
 def load_site_config() -> dict:
+    """Read main .yaml file containig high level website settings
+
+    Returns:
+        dict: Description
+    """
     with open(SITE_CONFIG_FILEPATH, "r") as file:
         site = yaml.safe_load(file)
     return site
 
 
 def load_post_ymls() -> dict:
+    """Read and group in a dict all .yaml files containing a single post data
+
+    Returns:
+        dict: Description
+    """
     post_yamls = {}
     for file in POSTS_FOLDER.glob("*.yml"):
         with open(file, "r") as stream:
             post_yaml = yaml.safe_load(stream)
-        post_yamls[post_yaml["slug"]] = post_yaml
+        if not post_yaml["draft"]:
+            post_yamls[post_yaml["slug"]] = post_yaml
 
     return post_yamls
 
 
-def load_post_ymls_by_tag(tag) -> dict:
+def load_post_ymls_by_tag(tag: str) -> dict:
+    """Read and group in a dict all .yaml files containing a single post data that matches an specific tag
+
+    Args:
+        tag (str): Description
+
+    Returns:
+        dict: Description
+    """
     tagged_post_yamls = {}
     for file in POSTS_FOLDER.glob("*.yml"):
         with open(file, "r") as stream:
@@ -54,6 +83,22 @@ def load_post_ymls_by_tag(tag) -> dict:
 
 @dataclass
 class Post:
+
+    """Class representing a single post
+
+    Attributes:
+        content (TYPE): Description
+        date (TYPE): Description
+        draft(TYPE): Description
+        excerpt (TYPE): Description
+        image (TYPE): Description
+        markdown_path (TYPE): Description
+        show_comments (TYPE): Description
+        slug (TYPE): Description
+        tags (TYPE): Description
+        title (TYPE): Description
+    """
+
     title: str
     date: datetime.datetime
     image: str
@@ -61,8 +106,11 @@ class Post:
     tags: List[str]
     show_comments: bool
     slug: str
+    draft: bool
 
-    def __init__(self, title, date, image, markdown_path, tags, show_comments, slug):
+    def __init__(
+        self, title, date, image, markdown_path, tags, show_comments, slug, draft
+    ):
         self.title = title
         self.date = datetime.datetime.strptime(date, "%d/%m/%y %H:%M")
         self.image = image
@@ -70,15 +118,49 @@ class Post:
         self.tags = tags
         self.show_comments = show_comments
         self.slug = slug
+        self.draft = draft
 
+    @property
+    def excerpt(self):
+        return self.content[0:3000]
+
+    @property
+    def content(self):
+        # can we cache this?
         with open(self.markdown_path, "r", encoding="utf-8") as post:
-            self.content = Markup(
+            return Markup(
                 markdown.markdown(
-                    post.read(), extensions=["fenced_code", "toc", "codehilite"]
+                    post.read(),
+                    extensions=[
+                        "fenced_code",
+                        "toc",
+                        "codehilite",
+                        "pymdownx.arithmatex",
+                    ],
                 )
             )
 
-        self.excerpt = self.content[0:3000]
+
+@dataclass
+class Site:
+    title: str
+    name: str
+    job_title: str
+    email: str
+    description: str
+    avatar: str
+    favicon: str
+    twitter_handler: str
+    analytics_code: str
+    disqus: str
+    pages: List[Dict]
+    social_networks: List[Dict]
+    show_tags: bool
+    show_email: bool
+    show_rss: bool
+    show_comments: bool
+    show_menu: bool
+    fixed_sidebar: bool
 
 
 @dataclass
@@ -92,11 +174,17 @@ class Page:
 
 @app.route("/")
 def index():
+    """Renders the home view, containig all posts
+
+    Returns:
+        TYPE: Description
+    """
     site = load_site_config()
 
     post_yamls = load_post_ymls()
 
     posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+    posts.sort(key=lambda post: post.date, reverse=True)
 
     paginator = {"posts": posts}
 
@@ -119,16 +207,24 @@ def index():
 
 
 @app.route("/post/<slug>")
-def post(slug):
+def post(slug: str):
+    """Renders a view for an specific post (defined by the slug)
+
+    Args:
+        slug (str): Description
+
+    Returns:
+        TYPE: Description
+    """
     site = load_site_config()
 
     post_yamls = load_post_ymls()
 
+    posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+
     post_yaml = post_yamls[slug]
 
     post = Post(**post_yaml)
-
-    posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
 
     paginator = {"posts": posts}
 
@@ -136,7 +232,7 @@ def post(slug):
         title=f'{post.title} | {site["title"]}',
         title_share=f'{post.title} | {site["title"]}',
         description=post.excerpt,
-        image=url_for('static', filename=f"images/posts/{slug}/{post.image}"),
+        image=url_for("static", filename=f"images/posts/{slug}/{post.image}"),
         url=f"post/{slug}",
     )
 
@@ -152,12 +248,21 @@ def post(slug):
 
 
 @app.route("/tag/<slug>")
-def tags(slug):
+def tags(slug: str):
+    """Renders a view containing all the posts that matches one specific tag (defined by the slug)
+
+    Args:
+        slug (str): Description
+
+    Returns:
+        TYPE: Description
+    """
     site = load_site_config()
 
     tagged_posts_yamls = load_post_ymls_by_tag(slug)
 
     posts = [Post(**post_yaml) for post_yaml in tagged_posts_yamls.values()]
+    posts.sort(key=lambda item: item.date, reverse=True)
 
     paginator = {"posts": posts}
 
