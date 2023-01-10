@@ -165,6 +165,7 @@ def index():
     post_yamls = load_post_ymls()
 
     posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+    posts.sort(key=lambda post: post.date, reverse=True)
 
     paginator = {"posts": posts}
 
@@ -228,6 +229,7 @@ def tags(slug: str):
     tagged_posts_yamls = load_post_ymls_by_tag(slug)
 
     posts = [Post(**post_yaml) for post_yaml in tagged_posts_yamls.values()]
+    posts.sort(key=lambda post: post.date, reverse=True)
 
     paginator = {"posts": posts}
 
