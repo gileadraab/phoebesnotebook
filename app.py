@@ -110,6 +110,10 @@ class Post:
         return self.content[0:3000]
 
     @property
+    def excerpt(self):
+        return self.content[0:3000]
+
+    @property
     def content(self):
         # can we cache this?
         with open(self.markdown_path, "r", encoding="utf-8") as post:
