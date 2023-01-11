@@ -73,7 +73,7 @@ class Post:
     Attributes:
         content (str): HTML containing the body of the post
         date (datetime.datetime): Date the post is published
-        excerpt (str): a short preview of the post (used in the index page instead of the full post)
+        excerpt (str): A short preview of the post (used in the index page instead of the full post)
         image (str): Image filename
         markdown_path (Path): Path to the markdown file to be converted to html
         show_comments (bool): Define if comments are allowed for the post
