@@ -43,7 +43,7 @@ def load_site_config() -> dict:
 
 
 def load_post_ymls() -> dict:
-    """Read and group in a dict all .yaml files containing a single post data"""
+    """Read all the yaml files corresponding to posts, and store them in a dict whose key is the slug of each post and the value is the content of the yaml file"""
     post_yamls = {}
     for file in POSTS_FOLDER.glob("*.yml"):
         with open(file, "r") as stream:
@@ -55,7 +55,7 @@ def load_post_ymls() -> dict:
 
 
 def load_post_ymls_by_tag(tag: str) -> dict:
-    """Read and group in a dict all .yaml files containing a single post data that matches an specific tag"""
+    """Read all the yaml files corresponding to posts, and store the ones that matches an specific tag in a dict whose key is the slug of each post and the value is the content of the yaml file"""
     tagged_post_yamls = {}
     for file in POSTS_FOLDER.glob("*.yml"):
         with open(file, "r") as stream:
@@ -73,15 +73,16 @@ class Post:
 
     Attributes:
         content (str): HTML containing the body of the post
-        date (datetime.datetime): date the post is published
-        draft(bool): defines if the post is a draft, draft posts are not shown
-        excerpt (str): content capped to 3000 chars
-        image (str): path to the post image
-        markdown_path (Path): path to the markdown file to be converted to html
-        show_comments (bool): define if comments are allowed for the post
-        slug (str): the post slug
-        tags (List[str]): a list of tags related to the post subject
-        title (str): post title
+        date (datetime.datetime): Date the post is published
+        draft(bool): If this is True posts are not shown anywhere
+        excerpt (str): A short preview of the post (used in the index page instead of the full post)
+        image (str): Image filename
+        markdown_path (Path): Path to the markdown file to be converted to html
+        show_comments (bool): Define if comments are allowed for the post
+        slug (str): The post slug
+        tags (List[str]): A list of tags related to the post subject
+        title (str): Post title
+
     """
 
     title: str
@@ -163,7 +164,7 @@ class Page:
 
 @app.route("/")
 def index():
-    """Renders the home view, containig all posts"""
+    """Renders the template for the home page, containig all posts"""
     site = load_site_config()
 
     post_yamls = load_post_ymls()
@@ -192,7 +193,7 @@ def index():
 
 @app.route("/post/<slug>")
 def post(slug: str):
-    """Renders a view for an specific post (defined by the slug)"""
+    """Renders the template for a specific post (defined by the slug)"""
     site = load_site_config()
 
     post_yamls = load_post_ymls()
@@ -226,7 +227,7 @@ def post(slug: str):
 
 @app.route("/tag/<slug>")
 def tags(slug: str):
-    """Renders a view containing all the posts that matches one specific tag (defined by the slug)"""
+    """Renders the template for the tag page, containig all posts that matches one specific tag (defined by the slug)"""
     site = load_site_config()
 
     tagged_posts_yamls = load_post_ymls_by_tag(slug)

@@ -35,7 +35,7 @@ var store = [{% for post in paginator.posts %}{
     "image": {{ post.image | tojson }},
     "date": {{ post.date.strftime( "%d %b, %Y" ) | tojson }},
     "excerpt": {{ post.content | striptags | truncate(length=100) | tojson }}
-}{% endfor %}]
+},{% endfor %}]
 
 
 $(document).ready(function() {
