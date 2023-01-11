@@ -9,3 +9,4 @@ tags:
 show_comments: 1
 markdown_path: "automating-deployments-with-ansible.md"
 slug: "automating-deployments-with-ansible"
+draft: false

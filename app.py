@@ -48,7 +48,8 @@ def load_post_ymls() -> dict:
     for file in POSTS_FOLDER.glob("*.yml"):
         with open(file, "r") as stream:
             post_yaml = yaml.safe_load(stream)
-        post_yamls[post_yaml["slug"]] = post_yaml
+        if not post_yaml["draft"]:
+            post_yamls[post_yaml["slug"]] = post_yaml
 
     return post_yamls
 
@@ -73,6 +74,7 @@ class Post:
     Attributes:
         content (str): HTML containing the body of the post
         date (datetime.datetime): Date the post is published
+        draft(bool): If this is True posts are not shown anywhere
         excerpt (str): A short preview of the post (used in the index page instead of the full post)
         image (str): Image filename
         markdown_path (Path): Path to the markdown file to be converted to html
@@ -80,6 +82,7 @@ class Post:
         slug (str): The post slug
         tags (List[str]): A list of tags related to the post subject
         title (str): Post title
+
     """
 
     title: str
@@ -89,8 +92,11 @@ class Post:
     tags: List[str]
     show_comments: bool
     slug: str
+    draft: bool
 
-    def __init__(self, title, date, image, markdown_path, tags, show_comments, slug):
+    def __init__(
+        self, title, date, image, markdown_path, tags, show_comments, slug, draft
+    ):
         self.title = title
         self.date = datetime.datetime.strptime(date, "%d/%m/%y %H:%M")
         self.image = image
@@ -98,6 +104,11 @@ class Post:
         self.tags = tags
         self.show_comments = show_comments
         self.slug = slug
+        self.draft = draft
+
+    @property
+    def excerpt(self):
+        return self.content[0:3000]
 
     @property
     def excerpt(self):
