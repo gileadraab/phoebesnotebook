@@ -1,0 +1,13 @@
+date: "09/01/23 15:50"
+title: "Matplotlib, decorators and plotting waves"
+image: "ansible.png"
+tags: 
+- "matplotlib" 
+- "waves"
+- "waveforms"
+- "decorators"
+- "plotting"
+show_comments: 1
+markdown_path: "plotting-waveforms-with-matplotlib.md"
+slug: "plotting-waveforms-with-matplotlib"
+draft: false

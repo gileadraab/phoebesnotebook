@@ -170,6 +170,7 @@ def index():
     post_yamls = load_post_ymls()
 
     posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+    print(len(posts))
     posts.sort(key=lambda post: post.date, reverse=True)
 
     paginator = {"posts": posts}

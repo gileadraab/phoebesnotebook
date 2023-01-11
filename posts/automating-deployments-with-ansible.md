@@ -408,7 +408,7 @@ After doing that our playbook should be looking something like this:
     requirements_path: /home/myproject/requirements.txt
     venv_path: /home/myproject/venv
     service_file: myProjectServices.service
-    block_configuration_file: myProjectRequests
+    nginx_config: myProjectRequests
   user: root
   tasks:
     - name: Update and upgrade apt packages
@@ -471,16 +471,16 @@ After doing that our playbook should be looking something like this:
 
     - name: Copy server block configuration file to server
       ansible.builtin.copy:
-        src: "{{block_configuration_file}}"
-        dest: /etc/nginx/sites-available/{{block_configuration_file}}
+        src: "{{nginx_config}}"
+        dest: /etc/nginx/sites-available/{{nginx_config}}
         owner: root
         group: root
         mode: '0777'   
 
     - name: Creating a symlink between sites-available and sites-enabled directories
       ansible.builtin.file:
-        src: /etc/nginx/sites-available/{{block_configuration_file}}
-        dest: /etc/nginx/sites-enabled/{{block_configuration_file}}
+        src: /etc/nginx/sites-available/{{nginx_config}}
+        dest: /etc/nginx/sites-enabled/{{nginx_config}}
         state: link 
     
     - name: Start nginx
