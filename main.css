@@ -183,7 +183,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #333;
+  background: rgb(135, 139, 146);
   border-radius: 50%;
   transition: all 0.1s ease;
   -moz-transition: all 0.1s ease;
@@ -191,7 +191,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   -o-transition: all 0.1s ease;
 }
 .user-profile .socials li a:hover {
-  background: rgb(71, 78, 88);
+  background: rgb(94, 99, 107);
 }
 .user-profile .socials li a svg * {
   fill: #fff;
@@ -283,24 +283,24 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05), inset 6px 0 0 #eee;
 }
 .the-content .search ::-webkit-input-placeholder {
-  color: #666;
+  color: rgb(182, 178, 178);
   font-size: 16px;
   font-style: italic;
 }
 .the-content .search :-moz-placeholder {
-  color: #666;
+  color: #ddd;
   opacity: 1;
   font-size: 16px;
   font-style: italic;
 }
 .the-content .search ::-moz-placeholder {
-  color: #666;
+  color: #ddd;
   opacity: 1;
   font-size: 16px;
   font-style: italic;
 }
 .the-content .search :-ms-input-placeholder {
-  color: #666;
+  color: #ddd;
   font-size: 16px;
   font-style: italic;
 }
@@ -319,7 +319,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   min-height: 55px;
   line-height: 55px;
   color: #ddd;
-  background: #fff;
+  background: rgb(71, 78, 88);
   letter-spacing: 0.05em;
   font-size: 11px;
   text-transform: uppercase;
@@ -387,7 +387,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   transform: translate(0, -50%);
 }
 .the-content .search .results-container li a:hover {
-  background: #333;
+  background: #fff;
 }
 .the-content .post {
   position: relative;
@@ -1021,6 +1021,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   font-size: 16px;
 }
 
+
 @media screen and (max-width: 768px), screen and (max-device-width: 768px) {
   body {
     box-shadow: none;
@@ -1162,4 +1163,4 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   }
 }
 
-/*# sourceMappingURL=output.css.map */
+/*# sourceMappingURL=main.css.map */

@@ -19,7 +19,7 @@
 
 {#TO DO: this will stop working if pagination is implemented#}
 
-{% for post in paginator.posts %}
+{% for post in posts %}
     index.add({
       title: {{post.title | tojson}},
       content: {{post.content | striptags | tojson}},
@@ -29,7 +29,7 @@
 {% endfor %}
 
 
-var store = [{% for post in paginator.posts %}{
+var store = [{% for post in posts %}{
     "title": {{post.title | tojson}},
     "link": {{ url_for('post', slug= post.slug) | tojson }},
     "image": {{ post.image | tojson }},

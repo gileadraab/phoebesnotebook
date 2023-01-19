@@ -1,3 +1,4 @@
+from phoebesnotebook.joao.romario import my_func
 import datetime
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,35 +36,33 @@ def render_template_strict(template_filename: str, **kwargs):
     return template.render(**kwargs)
 
 
-def load_site_config() -> dict:
-    """Read main .yaml file containig high level website settings"""
-    with open(SITE_CONFIG_FILEPATH, "r") as file:
-        site = yaml.safe_load(file)
-    return site
+@dataclass
+class Site:
+    title: str
+    name: str
+    job_title: str
+    email: str
+    description: str
+    avatar: str
+    favicon: str
+    twitter_handler: str
+    analytics_code: str
+    disqus: str
+    pages: List[Dict]
+    social_networks: List[Dict]
+    show_tags: bool
+    show_email: bool
+    show_rss: bool
+    show_comments: bool
+    show_menu: bool
+    fixed_sidebar: bool
 
-
-def load_post_ymls() -> dict:
-    """Read all the yaml files corresponding to posts, and store them in a dict whose key is the slug of each post and the value is the content of the yaml file"""
-    post_yamls = {}
-    for file in POSTS_FOLDER.glob("*.yml"):
-        with open(file, "r") as stream:
-            post_yaml = yaml.safe_load(stream)
-        if not post_yaml["draft"]:
-            post_yamls[post_yaml["slug"]] = post_yaml
-
-    return post_yamls
-
-
-def load_post_ymls_by_tag(tag: str) -> dict:
-    """Read all the yaml files corresponding to posts, and store the ones that matches an specific tag in a dict whose key is the slug of each post and the value is the content of the yaml file"""
-    tagged_post_yamls = {}
-    for file in POSTS_FOLDER.glob("*.yml"):
-        with open(file, "r") as stream:
-            post_yaml = yaml.safe_load(stream)
-        if tag in post_yaml["tags"]:
-            tagged_post_yamls[post_yaml["slug"]] = post_yaml
-
-    return tagged_post_yamls
+    @classmethod
+    def load_from_yaml(cls) -> dict:
+        """Read main .yaml file containig high level website settings"""
+        with open(SITE_CONFIG_FILEPATH, "r") as file:
+            site = yaml.safe_load(file)
+        return Site(**site)
 
 
 @dataclass
@@ -94,6 +93,19 @@ class Post:
     slug: str
     draft: bool
 
+    @classmethod
+    def load_all(cls) -> dict:
+        """Read all the yaml files corresponding to posts, and store them in a dict whose key is the slug of each post and the value is the content of the yaml file"""
+        post_yamls = {}
+        for file in POSTS_FOLDER.glob("*.yml"):
+            with open(file, "r") as stream:
+                post_yaml = yaml.safe_load(stream)
+                post_yamls[post_yaml["slug"]] = post_yaml
+                posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
+                posts.sort(key=lambda post: post.date, reverse=True)
+                posts = list(filter(lambda post: post.draft == False, posts))
+        return posts
+
     def __init__(
         self, title, date, image, markdown_path, tags, show_comments, slug, draft
     ):
@@ -105,10 +117,6 @@ class Post:
         self.show_comments = show_comments
         self.slug = slug
         self.draft = draft
-
-    @property
-    def excerpt(self):
-        return self.content[0:3000]
 
     @property
     def excerpt(self):
@@ -132,28 +140,6 @@ class Post:
 
 
 @dataclass
-class Site:
-    title: str
-    name: str
-    job_title: str
-    email: str
-    description: str
-    avatar: str
-    favicon: str
-    twitter_handler: str
-    analytics_code: str
-    disqus: str
-    pages: List[Dict]
-    social_networks: List[Dict]
-    show_tags: bool
-    show_email: bool
-    show_rss: bool
-    show_comments: bool
-    show_menu: bool
-    fixed_sidebar: bool
-
-
-@dataclass
 class Page:
     title: str
     title_share: str
@@ -162,33 +148,45 @@ class Page:
     image: str
 
 
+class PageSinglePost(Page):
+    @classmethod
+    def build(cls, site: Site, post: Post, slug: str):
+        return PageSinglePost(
+            title=f"{post.title} | {site.title}",
+            title_share=f"{post.title} | {site.title}",
+            description=post.excerpt,
+            image=url_for("static", filename=f"images/posts/{slug}/{post.image}"),
+            url=f"post/{slug}",
+        )
+
+
+class PageMultiPost(Page):
+    @classmethod
+    def build(cls, site: Site):
+        return PageMultiPost(
+            title=site.title,
+            title_share=site.title,
+            description=site.description,
+            image=site.avatar,
+            url="",
+        )
+
+
 @app.route("/")
 def index():
     """Renders the template for the home page, containig all posts"""
-    site = load_site_config()
+    site = Site.load_from_yaml()
 
-    post_yamls = load_post_ymls()
+    posts = Post.load_all()
 
-    posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
-    print(len(posts))
-    posts.sort(key=lambda post: post.date, reverse=True)
-
-    paginator = {"posts": posts}
-
-    page = Page(
-        title=site["title"],
-        title_share=site["title"],
-        description=site["description"],
-        image=site["avatar"],
-        url="",
-    )
+    page = PageMultiPost.build(site)
 
     html = render_template(
         "default.html",
         site=site,
         page=page,
+        posts=posts,
         body_template="index.html",
-        paginator=paginator,
     )
     return html
 
@@ -196,33 +194,16 @@ def index():
 @app.route("/post/<slug>")
 def post(slug: str):
     """Renders the template for a specific post (defined by the slug)"""
-    site = load_site_config()
+    site = Site.load_from_yaml()
 
-    post_yamls = load_post_ymls()
+    posts = Post.load_all()
+    post = list(filter(lambda post: post.slug == slug, posts))
+    post = post[0]
 
-    posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
-
-    post_yaml = post_yamls[slug]
-
-    post = Post(**post_yaml)
-
-    paginator = {"posts": posts}
-
-    page = Page(
-        title=f'{post.title} | {site["title"]}',
-        title_share=f'{post.title} | {site["title"]}',
-        description=post.excerpt,
-        image=url_for("static", filename=f"images/posts/{slug}/{post.image}"),
-        url=f"post/{slug}",
-    )
+    page = PageSinglePost.build(site, post, slug)
 
     html = render_template(
-        "default.html",
-        site=site,
-        page=page,
-        post=post,
-        body_template="post.html",
-        paginator=paginator,
+        "default.html", site=site, page=page, post=post, body_template="post.html"
     )
     return html
 
@@ -230,23 +211,15 @@ def post(slug: str):
 @app.route("/tag/<slug>")
 def tags(slug: str):
     """Renders the template for the tag page, containig all posts that matches one specific tag (defined by the slug)"""
-    site = load_site_config()
+    site = Site.load_from_yaml()
 
-    tagged_posts_yamls = load_post_ymls_by_tag(slug)
+    posts = Post.load_all()
+    posts = list(filter(lambda post: slug in post.tags, posts))
 
-    posts = [Post(**post_yaml) for post_yaml in tagged_posts_yamls.values()]
-    posts.sort(key=lambda post: post.date, reverse=True)
-
-    paginator = {"posts": posts}
-
-    page = {"url": "/"}
+    page = PageMultiPost.build(site)
 
     html = render_template(
-        "default.html",
-        site=site,
-        page=page,
-        body_template="index.html",
-        paginator=paginator,
+        "default.html", site=site, page=page, posts=posts, body_template="index.html"
     )
     return html
 
