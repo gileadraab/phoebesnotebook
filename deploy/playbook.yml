@@ -2,9 +2,9 @@
   vars:
     app_name: phoebesnotebook 
     git_repo: "https://github.com/gileadraab/phoebesnotebook.git"
-    git_branch: "gilead"
+    git_branch: "main"
     remote_project_path: /home/phoebesnotebook
-    venv_path: "{{remote_project_path}}/venv"
+    venv_path: "{{remote_project_path}}/.venv"
     service_file: phoebesnotebook.service
     nginx_config: nginx.conf
     server_name: phoebesnotebook.com
@@ -24,6 +24,10 @@
         - python3.8-venv
         - nginx
 
+    - name: Install poetry
+      ansible.builtin.shell: 
+        curl -sSL https://install.python-poetry.org | python3 -
+
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: "{{git_repo}}"
@@ -33,10 +37,10 @@
         update: yes
 
     - name: Install specified python requirements in indicated virtualenv
-      ansible.builtin.pip:
-        virtualenv_command: python3 -m venv
-        requirements: "{{remote_project_path}}/requirements.txt"
-        virtualenv: "{{venv_path}}"
+      ansible.builtin.shell: |
+        python3 -m venv {{venv_path}}
+        source {{venv_path}}/bin/activate
+        poetry install
     
     - name: Copy service file with owner and permissions to server
       ansible.builtin.template:
