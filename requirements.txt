@@ -1,7 +1,0 @@
-Flask
-gunicorn
-pyyaml
-MarkupSafe
-markdown
-Pygments
-pymdown-extensions

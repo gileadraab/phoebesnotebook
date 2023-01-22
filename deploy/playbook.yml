@@ -2,7 +2,7 @@
   vars:
     app_name: phoebesnotebook 
     git_repo: "https://github.com/gileadraab/phoebesnotebook.git"
-    git_branch: "main"
+    git_branch: "views"
     remote_project_path: /home/phoebesnotebook
     venv_path: "{{remote_project_path}}/.venv"
     service_file: phoebesnotebook.service
@@ -27,6 +27,11 @@
     - name: Install poetry
       ansible.builtin.shell: 
         curl -sSL https://install.python-poetry.org | python3 -
+
+    - name: Add another bin dir to system-wide $PATH.
+      copy:
+        dest: /root/.bashrc
+        content: 'PATH=$PATH:/root/.local/bin/'
 
     - name: Get repository from git and update locally
       ansible.builtin.git:

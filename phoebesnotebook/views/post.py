@@ -1,3 +1,8 @@
+from phoebesnotebook.models import PageSinglePost, Post, Site
+from phoebesnotebook.app import app
+from flask import Flask, render_template
+
+
 @app.route("/post/<slug>")
 def post(slug: str):
     """Renders the template for a specific post (defined by the slug)"""

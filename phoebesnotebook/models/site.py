@@ -1,3 +1,11 @@
+from dataclasses import dataclass
+from typing import Dict, List
+from pathlib import Path
+import yaml
+
+SITE_CONFIG_FILEPATH = Path("config") / "config.yml"
+
+
 @dataclass
 class Site:
     title: str

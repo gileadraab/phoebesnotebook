@@ -1,5 +1,10 @@
+from phoebesnotebook.app import app
+from phoebesnotebook.models import PageMultiPost, Post, Site
+from flask import Flask, render_template, request, url_for
+
+
 @app.route("/tag/<slug>")
-def tags(slug: str):
+def tagged(slug: str):
     """Renders the template for the tag page, containig all posts that matches one specific tag (defined by the slug)"""
     site = Site.load_from_yaml()
 
