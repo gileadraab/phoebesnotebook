@@ -1,7 +1,6 @@
 from phoebesnotebook.models import PageMultiPost, Post, Site
-from phoebesnotebook import app
 from phoebesnotebook.app import app
-from flask import Flask, render_template, request, url_for
+from flask import render_template
 
 
 @app.route("/")

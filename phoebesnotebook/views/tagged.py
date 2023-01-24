@@ -1,6 +1,6 @@
 from phoebesnotebook.app import app
 from phoebesnotebook.models import PageMultiPost, Post, Site
-from flask import Flask, render_template, request, url_for
+from flask import render_template
 
 
 @app.route("/tag/<slug>")

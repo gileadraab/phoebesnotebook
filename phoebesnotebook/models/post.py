@@ -37,9 +37,10 @@ class Post:
     show_comments: bool
     slug: str
     draft: bool
+    excerpt_length: int
 
     @classmethod
-    def load_all(cls) -> dict:
+    def load_all(cls) -> Dict:
         """Read all the yaml files corresponding to posts, and store them in a dict whose key is the slug of each post and the value is the content of the yaml file"""
         post_yamls = {}
         for file in POSTS_FOLDER.glob("*.yml"):
@@ -52,7 +53,16 @@ class Post:
         return posts
 
     def __init__(
-        self, title, date, image, markdown_path, tags, show_comments, slug, draft
+        self,
+        title,
+        date,
+        image,
+        markdown_path,
+        tags,
+        show_comments,
+        slug,
+        draft,
+        excerpt_length,
     ):
         self.title = title
         self.date = datetime.datetime.strptime(date, "%d/%m/%y %H:%M")
@@ -62,10 +72,11 @@ class Post:
         self.show_comments = show_comments
         self.slug = slug
         self.draft = draft
+        self.excerpt_length = excerpt_length
 
     @property
     def excerpt(self):
-        return self.content[0:3000]
+        return self.content[0 : self.excerpt_length]
 
     @property
     def content(self):

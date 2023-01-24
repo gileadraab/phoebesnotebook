@@ -1,6 +1,6 @@
 from phoebesnotebook.models import PageSinglePost, Post, Site
 from phoebesnotebook.app import app
-from flask import Flask, render_template
+from flask import render_template
 
 
 @app.route("/post/<slug>")

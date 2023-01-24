@@ -14,5 +14,5 @@ deploy:
 
 check:
 	black .
-	flake8 .
+	flake8 phoebesnotebook
 	isort .

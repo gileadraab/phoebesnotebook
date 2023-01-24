@@ -319,7 +319,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   min-height: 55px;
   line-height: 55px;
   color: #ddd;
-  background: #fff;
+  background: #333;
   letter-spacing: 0.05em;
   font-size: 11px;
   text-transform: uppercase;
@@ -387,7 +387,7 @@ header, nav, section, main, article, aside, figure, footer, iframe, object, svg 
   transform: translate(0, -50%);
 }
 .the-content .search .results-container li a:hover {
-  background: #333;
+  color: #333;
 }
 .the-content .post {
   position: relative;

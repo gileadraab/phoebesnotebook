@@ -51,7 +51,7 @@
 	& > h1 { text-transform: uppercase; color: $grey-color-light; letter-spacing: 0.1em; font-size: 12px; font-weight: 400; margin: 0 0 20px; text-align: center; }
 	.search { position: relative; margin: 0 0 20px; border: 1px solid $grey-color-lightest; background: $white; box-shadow: 0 2px 3px rgba($black,.05), inset 6px 0 0 $grey-color-lightest; @include placeholder($grey-color-normal, italic);
 		& > div { @include flexbox(); overflow: hidden;
-			.show-results-count { min-width: 100px; margin-left: -100px; padding: 0 20px; min-height: 55px; line-height: 55px; color: $grey-color-lighter; background: $white; letter-spacing: 0.05em; font-size: 11px; text-transform: uppercase; box-shadow: 6px 0 0 0 $grey-color-lightest; @include transition(all .2s ease);
+			.show-results-count { min-width: 100px; margin-left: -100px; padding: 0 20px; min-height: 55px; line-height: 55px; color: $grey-color-lighter; background: $grey-color-dark; letter-spacing: 0.05em; font-size: 11px; text-transform: uppercase; box-shadow: 6px 0 0 0 $grey-color-lightest; @include transition(all .2s ease);
 				&.active { margin-left: 0; }
 			}
 			.search-holder { width: 100%; margin: 0 0 0 34px; background: url(../svg/search-icon.svg) no-repeat left center; @include bgsizeNum(15px, 16px); padding: 0 0 0 25px;
@@ -62,7 +62,7 @@
 			li { font-size: 15px;
 				a { position: relative; display: block; padding: 15px 15px 15px 35px; background: $background-color; box-shadow: 0 -1px 0 $grey-color-lightest; @include transition(background .1s ease);
 					&:before { position: absolute; top: 50%; left: 15px; background: $grey-color-normal; content: ""; width: 5px; height: 5px; border-radius: 50%; @include translate(0, -50%); }
-					&:hover { background: $grey-color-dark; }
+					&:hover { color: $grey-color-dark}
 				}
 			}
 		}
