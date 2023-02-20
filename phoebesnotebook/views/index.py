@@ -1,16 +1,19 @@
-from phoebesnotebook.models import PageMultiPost, Post, Site
-from phoebesnotebook.app import app
+from typing import List
+
 from flask import render_template
+
+from phoebesnotebook.app import app
+from phoebesnotebook.models import Page, PageMultiPost, Post, Site
 
 
 @app.route("/")
 def index():
     """Renders the template for the home page, containig all posts"""
-    site = Site.load_from_yaml()
+    site: Site = Site.load_from_yaml()
 
-    posts = Post.load_all()
+    posts: List[Post] = Post.load_all()
 
-    page = PageMultiPost.build(site)
+    page: Page = PageMultiPost.build(site)
 
     html = render_template(
         "default.html",

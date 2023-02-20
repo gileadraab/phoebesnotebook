@@ -1,11 +1,14 @@
-from dataclasses import dataclass
-import datetime
-from pathlib import Path
-import yaml
-from typing import Dict, List
-import markdown
-from markupsafe import Markup
+from __future__ import annotations
 
+import datetime
+import functools
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List
+
+import markdown
+import yaml
+from markupsafe import Markup
 
 POSTS_FOLDER = Path("posts")
 
@@ -19,7 +22,9 @@ class Post:
         content (str): HTML containing the body of the post
         date (datetime.datetime): Date the post is published
         draft(bool): If this is True posts are not shown anywhere
-        excerpt (str): A short preview of the post (used in the index page instead of the full post)
+        excerpt (str): A short preview of the post
+        (used in the index page instead of the full post)
+        excerpt_length (int): Define the number of chars contained in an excerpt
         image (str): Image filename
         markdown_path (Path): Path to the markdown file to be converted to html
         show_comments (bool): Define if comments are allowed for the post
@@ -40,8 +45,11 @@ class Post:
     excerpt_length: int
 
     @classmethod
-    def load_all(cls) -> Dict:
-        """Read all the yaml files corresponding to posts, and store them in a dict whose key is the slug of each post and the value is the content of the yaml file"""
+    def load_all(cls) -> List[Post]:
+        """Read all the yaml files corresponding to posts
+        and store them in a dict whose key is the slug of each post
+        and the value is the content of the yaml file an then convert
+        them into list of posts"""
         post_yamls = {}
         for file in POSTS_FOLDER.glob("*.yml"):
             with open(file, "r") as stream:
@@ -49,47 +57,30 @@ class Post:
                 post_yamls[post_yaml["slug"]] = post_yaml
                 posts = [Post(**post_yaml) for post_yaml in post_yamls.values()]
                 posts.sort(key=lambda post: post.date, reverse=True)
-                posts = list(filter(lambda post: post.draft == False, posts))
+                posts = list(filter(lambda post: post.draft is False, posts))
         return posts
-
-    def __init__(
-        self,
-        title,
-        date,
-        image,
-        markdown_path,
-        tags,
-        show_comments,
-        slug,
-        draft,
-        excerpt_length,
-    ):
-        self.title = title
-        self.date = datetime.datetime.strptime(date, "%d/%m/%y %H:%M")
-        self.image = image
-        self.markdown_path = POSTS_FOLDER / markdown_path
-        self.tags = tags
-        self.show_comments = show_comments
-        self.slug = slug
-        self.draft = draft
-        self.excerpt_length = excerpt_length
 
     @property
     def excerpt(self):
         return self.content[0 : self.excerpt_length]
 
-    @property
+    @functools.cached_property
     def content(self):
-        # can we cache this?
+        extensions = [
+            "fenced_code",
+            "toc",
+            "codehilite",
+            "pymdownx.arithmatex",
+        ]
+
         with open(self.markdown_path, "r", encoding="utf-8") as post:
             return Markup(
                 markdown.markdown(
                     post.read(),
-                    extensions=[
-                        "fenced_code",
-                        "toc",
-                        "codehilite",
-                        "pymdownx.arithmatex",
-                    ],
+                    extensions=extensions,
                 )
             )
+
+    def __post_init__(self):
+        self.date = datetime.datetime.strptime(self.date, "%d/%m/%y %H:%M")
+        self.markdown_path = POSTS_FOLDER / self.markdown_path

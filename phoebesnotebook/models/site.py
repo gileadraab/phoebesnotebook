@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Dict, List
 from pathlib import Path
+from typing import Dict, List
+
 import yaml
 
 SITE_CONFIG_FILEPATH = Path("config") / "config.yml"
@@ -28,7 +31,7 @@ class Site:
     fixed_sidebar: bool
 
     @classmethod
-    def load_from_yaml(cls) -> dict:
+    def load_from_yaml(cls) -> Site:
         """Read main .yaml file containig high level website settings"""
         with open(SITE_CONFIG_FILEPATH, "r") as file:
             site = yaml.safe_load(file)

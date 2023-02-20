@@ -2,7 +2,7 @@
   vars:
     app_name: phoebesnotebook 
     git_repo: "https://github.com/gileadraab/phoebesnotebook.git"
-    git_branch: "views"
+    git_branch: "main"
     remote_project_path: /home/phoebesnotebook
     venv_path: "{{remote_project_path}}/.venv"
     service_file: phoebesnotebook.service

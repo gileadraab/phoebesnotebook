@@ -16,3 +16,5 @@ check:
 	black .
 	flake8 phoebesnotebook
 	isort .
+	bandit -r phoebesnotebook
+	mypy .

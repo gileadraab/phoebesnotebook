@@ -1,7 +1,9 @@
 from dataclasses import dataclass
-from phoebesnotebook.models.site import Site
-from phoebesnotebook.models.post import Post
+
 from flask import url_for
+
+from phoebesnotebook.models.post import Post
+from phoebesnotebook.models.site import Site
 
 
 @dataclass
@@ -9,8 +11,8 @@ class Page:
     title: str
     title_share: str
     description: str
-    url: str
     image: str
+    url: str
 
 
 class PageSinglePost(Page):
