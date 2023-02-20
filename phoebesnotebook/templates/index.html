@@ -1,0 +1,36 @@
+{% for post in posts %}
+<article class="post" role="article" itemscope itemtype="http://schema.org/BlogPosting">
+    <header class="post-header">
+        <ul>
+            <li><time datetime="{{ post.date.isoformat() }}" itemprop="datePublished">{{ post.date.strftime( "%d %b, %Y" ) }}</time></li>
+        </ul>
+        <h2 itemprop="name headline"><a href="{{ url_for('post', slug = post.slug) }}">{{ post.title }}</a></h2>
+    </header>
+
+    <div class="post-content">
+        {{ post.excerpt }}
+
+        {% if post.excerpt != post.content %}
+            <p><a href="{{ url_for('post', slug = post.slug) }}" role="button">Read More</a></p>
+        {% endif %}
+    </div>
+
+    <footer class="post-footer">
+        <div class="share">Share
+            <ul class="social-networks">
+                <li class="share-facebook"><a href="https://www.facebook.com/sharer.php?s=100&p[title]={{ post.title | striptags }}&p[summary]={{ post.excerpt | striptags | truncate(140) }}&p[url]={{ url_for('post', slug = post.slug) }}" class="s_facebook" target="_blank" onclick="window.open(this.href, '','width=700,height=300');return false;"><svg title="" width="16" height="16"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{ url_for('static', filename = 'svg/social-icons.svg')}}#facebook-icon"></use></svg></a></a></li>
+                <li class="share-twitter"><a href="http://twitter.com/share?url={{ url_for('index') | escape}}&text={{ post.title | striptags | truncate(140) }}&hashtags={% for tag in post.tags %}{{ tag }},{% endfor %}" rel="noreferrer" target="_blank" onclick="window.open(this.href, '','width=700,height=300');return false;"><svg title="" width="16" height="16"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{ url_for('static', filename = 'svg/social-icons.svg')}}#twitter-icon"></use></svg></a></li>
+            </ul>
+        </div>
+        {% if site.show_tags == 1 and post.tags %}
+        <div class="tags">
+            <ul>
+                {% for tag in post.tags %}
+                <li><a href="{{ url_for('tagged', slug = tag) }}">{{ tag }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </footer>
+</article>
+{% endfor %}

@@ -2,10 +2,12 @@
   vars:
     app_name: phoebesnotebook 
     git_repo: "https://github.com/gileadraab/phoebesnotebook.git"
-    git_branch: "gilead"
+    git_branch: "main"
     remote_project_path: /home/phoebesnotebook
-    venv_path: "{{remote_project_path}}/venv"
+    venv_path: "{{remote_project_path}}/.venv"
     service_file: phoebesnotebook.service
+    poetry_path: poetry_path.sh
+    pyenv_dependencies: build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
     nginx_config: nginx.conf
     server_name: phoebesnotebook.com
     
@@ -24,6 +26,11 @@
         - python3.8-venv
         - nginx
 
+    - name: Install poetry and pyenv
+      ansible.builtin.shell: |
+        curl https://pyenv.run | bash
+        curl -sSL https://install.python-poetry.org | python3 -
+
     - name: Get repository from git and update locally
       ansible.builtin.git:
         repo: "{{git_repo}}"
@@ -32,11 +39,33 @@
         clone: yes
         update: yes
 
+    - name: Install Pyenv dependencies
+      ansible.builtin.shell: 
+        apt -y install {{pyenv_dependencies}}
+
+    - name: Install latest python version
+      ansible.builtin.shell:
+        /root/.pyenv/bin/pyenv install --skip-existing
+      args:
+        chdir: "{{remote_project_path}}"
+
+    - name: Create virtualenv
+      ansible.builtin.shell:
+        . /etc/profile.d/pyenv_path.sh && python -m venv {{venv_path}}
+      args:
+        chdir: "{{remote_project_path}}"
+
+    - name: Activate virtualenv
+      ansible.builtin.shell:
+        . {{venv_path}}/bin/activate
+      args:
+        chdir: "{{remote_project_path}}"
+
     - name: Install specified python requirements in indicated virtualenv
-      ansible.builtin.pip:
-        virtualenv_command: python3 -m venv
-        requirements: "{{remote_project_path}}/requirements.txt"
-        virtualenv: "{{venv_path}}"
+      ansible.builtin.shell:
+        /root/.local/bin//poetry install
+      args:
+        chdir: "{{remote_project_path}}"
     
     - name: Copy service file with owner and permissions to server
       ansible.builtin.template:
