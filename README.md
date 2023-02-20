@@ -5,7 +5,4 @@
 [![Imports: isort](https://img.shields.io/badge/imports-isort-%231674b1)](https://pycqa.github.io/isort/)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-Site pessoal onde posto conteudos sobre programação, matemática e tecnologia. 
-Desenvolvido com Flask, Jinja2, HTML e CSS e deploy feito utilizando Gunicorn e Nginx automatizado via Ansible
-
 [phoebesnotebook.com](https://www.phoebesnotebook.com/)
